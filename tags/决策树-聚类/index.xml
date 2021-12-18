@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>决策树 聚类 on Byron&#39;s Blog</title>
+    <link>https://Bynotforget.github.io/tags/%E5%86%B3%E7%AD%96%E6%A0%91-%E8%81%9A%E7%B1%BB/</link>
+    <description>Recent content in 决策树 聚类 on Byron&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Mon, 13 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://Bynotforget.github.io/tags/%E5%86%B3%E7%AD%96%E6%A0%91-%E8%81%9A%E7%B1%BB/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>机器学习总结（一）</title>
+      <link>https://Bynotforget.github.io/posts/third/</link>
+      <pubDate>Mon, 13 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://Bynotforget.github.io/posts/third/</guid>
+      <description>这周回顾了机器学习中的决策树、K均值聚类。
+关于决策树，个人感觉最可能会让人产生困惑的知识点是决策树三种递归返回情形、缺失值处理的具体细节的解释，具体还得自己琢磨一下4.4.2节的例子、决策树分类边界的轴平行特点。值得一提的是，决策树不仅可以用于分类任务，也可以用于回归任务，常见的做法是用叶结点所有样本的平均值作为预测回归值。
+西瓜书聚类这章节介绍的均值算法、学习向量量化、高斯混合聚类，以及DBSCAN和AGNES。均值算法一般使用欧氏距离，但该距离仅针对连续属性；而当属性为离散值时，VDM当然是一种备选，但课后阅读材料使用了更简单的办法：若属性值相同，则距离为0，若属性不同，则距离为 1，因此编号 1 和编号 2 之间的距离为 2，因为它们只有在色泽和敲声两个属性上面取值不同。谱聚类是一种基于图论的聚类方法。简单来说将每个样本看作无向图的顶点，各顶点之间的某种关联性度量作为无向图的边，常用的度量方式是第 301 页的式(13.11)，聚类任务要将无向图分割若干个簇，即无向图的部分边要被去除，谱聚类试图使去除的边的权重之和最小，而这实际上类似于图分割。
+2021-12-13
+ </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,81 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Posts on Byron&#39;s Blog</title>
+		<link>https://Bynotforget.github.io/posts/</link>
+		<description>Recent content in Posts on Byron&#39;s Blog</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>zh-CN</language>
+		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+		<lastBuildDate>Mon, 13 Dec 2021 00:00:00 +0000</lastBuildDate>
+		<atom:link href="https://Bynotforget.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>机器学习总结（一）</title>
+			<link>https://Bynotforget.github.io/posts/third/</link>
+			<pubDate>Mon, 13 Dec 2021 00:00:00 +0000</pubDate>
+			
+			<guid>https://Bynotforget.github.io/posts/third/</guid>
+			<description>这周回顾了机器学习中的决策树、K均值聚类。
+关于决策树，个人感觉最可能会让人产生困惑的知识点是决策树三种递归返回情形、缺失值处理的具体细节的解释，具体还得自己琢磨一下4.4.2节的例子、决策树分类边界的轴平行特点。值得一提的是，决策树不仅可以用于分类任务，也可以用于回归任务，常见的做法是用叶结点所有样本的平均值作为预测回归值。
+西瓜书聚类这章节介绍的均值算法、学习向量量化、高斯混合聚类，以及DBSCAN和AGNES。均值算法一般使用欧氏距离，但该距离仅针对连续属性；而当属性为离散值时，VDM当然是一种备选，但课后阅读材料使用了更简单的办法：若属性值相同，则距离为0，若属性不同，则距离为 1，因此编号 1 和编号 2 之间的距离为 2，因为它们只有在色泽和敲声两个属性上面取值不同。谱聚类是一种基于图论的聚类方法。简单来说将每个样本看作无向图的顶点，各顶点之间的某种关联性度量作为无向图的边，常用的度量方式是第 301 页的式(13.11)，聚类任务要将无向图分割若干个簇，即无向图的部分边要被去除，谱聚类试图使去除的边的权重之和最小，而这实际上类似于图分割。
+2021-12-13
+ </description>
+			<content type="html"><![CDATA[<p>这周回顾了机器学习中的决策树、K均值聚类。</p>
+<p>关于决策树，个人感觉最可能会让人产生困惑的知识点是决策树三种递归返回情形、缺失值处理的具体细节的解释，具体还得自己琢磨一下4.4.2节的例子、决策树分类边界的轴平行特点。值得一提的是，决策树不仅可以用于分类任务，也可以用于回归任务，常见的做法是用叶结点所有样本的平均值作为预测回归值。</p>
+<p>西瓜书聚类这章节介绍的均值算法、学习向量量化、高斯混合聚类，以及DBSCAN和AGNES。均值算法一般使用欧氏距离，但该距离仅针对连续属性；而当属性为离散值时，VDM当然是一种备选，但课后阅读材料使用了更简单的办法：若属性值相同，则距离为0，若属性不同，则距离为 1，因此编号 1 和编号 2 之间的距离为 2，因为它们只有在色泽和敲声两个属性上面取值不同。谱聚类是一种基于图论的聚类方法。简单来说将每个样本看作无向图的顶点，各顶点之间的某种关联性度量作为无向图的边，常用的度量方式是第 301 页的式(13.11)，聚类任务要将无向图分割若干个簇，即无向图的部分边要被去除，谱聚类试图使去除的边的权重之和最小，而这实际上类似于图分割。</p>
+<p>2021-12-13</p>
+<hr>
+]]></content>
+		</item>
+		
+		<item>
+			<title>西瓜书EM算法理解</title>
+			<link>https://Bynotforget.github.io/posts/second/</link>
+			<pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
+			
+			<guid>https://Bynotforget.github.io/posts/second/</guid>
+			<description>EM 算法的解释 我们希望使用最大似然估计由 ln P(X,Z|Θ)得到Θ ，但由于隐变量Z也是未知的，因此不能直接求解。
+EM 算法是一种交替迭代的方法：先假设已知Θ，求出Z的期望；然后利用估计出的Z再做极大似然估计得到新的Θ；进而再求Z的期望，再得到新的Θ……
+这里自然会产生一个问题：是否可以先假设已知Z，做极大似然估计得到Θ，然后再利用估计出的Θ更新Z呢？本来二者都是未知的，必须先初始化其一，到底应该是先有Θ再有Z还是应该先有Z再有Θ呢？
+如果仅从交替迭代优化的角度来说，肯定是可以的；另外，第 163页左下角的边注中提到 EM 算法可看作坐标下降法的特例，以附录 B.5 符号为准，一般来讲x的d维分量迭代顺序当然可交换。
+2021-12-10
+ </description>
+			<content type="html"><![CDATA[<p>EM 算法的解释
+我们希望使用最大似然估计由 ln P(X,Z|Θ)得到Θ ，但由于隐变量Z也是未知的，因此不能直接求解。</p>
+<p>EM 算法是一种交替迭代的方法：先假设已知Θ，求出Z的期望；然后利用估计出的Z再做极大似然估计得到新的Θ；进而再求Z的期望，再得到新的Θ……</p>
+<p>这里自然会产生一个问题：是否可以先假设已知Z，做极大似然估计得到Θ，然后再利用估计出的Θ更新Z呢？本来二者都是未知的，必须先初始化其一，到底应该是先有Θ再有Z还是应该先有Z再有Θ呢？</p>
+<p>如果仅从交替迭代优化的角度来说，肯定是可以的；另外，第 163页左下角的边注中提到 EM 算法可看作坐标下降法的特例，以附录 B.5 符号为准，一般来讲x的d维分量迭代顺序当然可交换。</p>
+<p>2021-12-10</p>
+<hr>
+]]></content>
+		</item>
+		
+		<item>
+			<title>第一篇</title>
+			<link>https://Bynotforget.github.io/posts/first/</link>
+			<pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
+			
+			<guid>https://Bynotforget.github.io/posts/first/</guid>
+			<description>通过本次学习百度AI课程，让我逐渐了解到了 国内的深度学习框架paddlepaddle。
+1、Aistudio 百度AI Studio是基于百度深度学习平台飞桨的一站式AI开发平台,提供在线编程环境、免费GPU算力、海量开源算法和开放数据,帮助开发者快速创建和部署模型。刚刚接触paddlepaddle，也是通过aistudio平台，在课程的驱动下，利用免费的GPU，开始常有深度学习的海洋。
+2、体会 云GPU真心好用，尤其免费真香。但是由于人数太多，机器有限，有时候需要等待，同时保存文件的时候有些不方便。查看一些底层代码不方便。 在课程中，也逐渐了解到更多的方法，和一些调参策略。paddle集成了这些方法，使得网络模型达到更高的精度。 在使用paddlepaddle过程中，感触最深的是，不需要配置各种环境，自动读取硬件的cpu和gpu。此外，更重要的是里面有各种场景应用，同时方便初学者就行操作。
+3、期待 本次学习中，让我看到了paddlepaddle的强大，希望百度深度学习框架能越做越好，能让更多的人看到你们。我也把它推荐给了身边的朋友。最后，希望paddlepaddle越做越好！！！
+2021-12-05
+ </description>
+			<content type="html"><![CDATA[<p>通过本次学习百度AI课程，让我逐渐了解到了
+国内的深度学习框架paddlepaddle。</p>
+<p>1、Aistudio
+百度AI Studio是基于百度深度学习平台飞桨的一站式AI开发平台,提供在线编程环境、免费GPU算力、海量开源算法和开放数据,帮助开发者快速创建和部署模型。刚刚接触paddlepaddle，也是通过aistudio平台，在课程的驱动下，利用免费的GPU，开始常有深度学习的海洋。</p>
+<p>2、体会
+云GPU真心好用，尤其免费真香。但是由于人数太多，机器有限，有时候需要等待，同时保存文件的时候有些不方便。查看一些底层代码不方便。
+在课程中，也逐渐了解到更多的方法，和一些调参策略。paddle集成了这些方法，使得网络模型达到更高的精度。
+在使用paddlepaddle过程中，感触最深的是，不需要配置各种环境，自动读取硬件的cpu和gpu。此外，更重要的是里面有各种场景应用，同时方便初学者就行操作。</p>
+<p>3、期待
+本次学习中，让我看到了paddlepaddle的强大，希望百度深度学习框架能越做越好，能让更多的人看到你们。我也把它推荐给了身边的朋友。最后，希望paddlepaddle越做越好！！！</p>
+<p>2021-12-05</p>
+<hr>
+]]></content>
+		</item>
+		
+	</channel>
+</rss>

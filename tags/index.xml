@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Byron&#39;s Blog</title>
+    <link>https://Bynotforget.github.io/tags/</link>
+    <description>Recent content in Tags on Byron&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Mon, 13 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://Bynotforget.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>决策树 聚类</title>
+      <link>https://Bynotforget.github.io/tags/%E5%86%B3%E7%AD%96%E6%A0%91-%E8%81%9A%E7%B1%BB/</link>
+      <pubDate>Mon, 13 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://Bynotforget.github.io/tags/%E5%86%B3%E7%AD%96%E6%A0%91-%E8%81%9A%E7%B1%BB/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>EM</title>
+      <link>https://Bynotforget.github.io/tags/em/</link>
+      <pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://Bynotforget.github.io/tags/em/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>day</title>
+      <link>https://Bynotforget.github.io/tags/day/</link>
+      <pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://Bynotforget.github.io/tags/day/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>first</title>
+      <link>https://Bynotforget.github.io/tags/first/</link>
+      <pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://Bynotforget.github.io/tags/first/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

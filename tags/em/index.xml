@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>EM on Byron&#39;s Blog</title>
+    <link>https://Bynotforget.github.io/tags/em/</link>
+    <description>Recent content in EM on Byron&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Fri, 10 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://Bynotforget.github.io/tags/em/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>西瓜书EM算法理解</title>
+      <link>https://Bynotforget.github.io/posts/second/</link>
+      <pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://Bynotforget.github.io/posts/second/</guid>
+      <description>EM 算法的解释 我们希望使用最大似然估计由 ln P(X,Z|Θ)得到Θ ，但由于隐变量Z也是未知的，因此不能直接求解。
+EM 算法是一种交替迭代的方法：先假设已知Θ，求出Z的期望；然后利用估计出的Z再做极大似然估计得到新的Θ；进而再求Z的期望，再得到新的Θ……
+这里自然会产生一个问题：是否可以先假设已知Z，做极大似然估计得到Θ，然后再利用估计出的Θ更新Z呢？本来二者都是未知的，必须先初始化其一，到底应该是先有Θ再有Z还是应该先有Z再有Θ呢？
+如果仅从交替迭代优化的角度来说，肯定是可以的；另外，第 163页左下角的边注中提到 EM 算法可看作坐标下降法的特例，以附录 B.5 符号为准，一般来讲x的d维分量迭代顺序当然可交换。
+2021-12-10
+ </description>
+    </item>
+    
+  </channel>
+</rss>
