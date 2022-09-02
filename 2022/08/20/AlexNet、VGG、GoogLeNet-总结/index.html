@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>AlexNet、VGG、GoogLeNet 总结 | A blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="一、AlexNet网络主要亮点有： （1）首次利用 GPU 进行网络加速训练。 （2）使用了 ReLU 激活函数，而不是传统的 Sigmoid 激活函数以及 Tanh 激活函数。 （3）使用了 LRN 局部响应归一化。 （4）在全连接层的前两层中使用了 Dropout 随机失活神经元操作，以减少过拟合。 引入Dropout的作用：过拟合：根本原因是特征维度过多，模型假设过于复杂，参数 过多，训练数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AlexNet、VGG、GoogLeNet 总结">
+<meta property="og:url" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="A blog">
+<meta property="og:description" content="一、AlexNet网络主要亮点有： （1）首次利用 GPU 进行网络加速训练。 （2）使用了 ReLU 激活函数，而不是传统的 Sigmoid 激活函数以及 Tanh 激活函数。 （3）使用了 LRN 局部响应归一化。 （4）在全连接层的前两层中使用了 Dropout 随机失活神经元操作，以减少过拟合。 引入Dropout的作用：过拟合：根本原因是特征维度过多，模型假设过于复杂，参数 过多，训练数">
+<meta property="og:locale">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/1.png">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/2.png">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/3.png">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/4.png">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/5.png">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/6.png">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/7.png">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/8.png">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/9.png">
+<meta property="og:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/10.png">
+<meta property="article:published_time" content="2022-08-20T09:25:29.000Z">
+<meta property="article:modified_time" content="2022-08-24T13:32:22.658Z">
+<meta property="article:author" content="BY">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="A blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">A blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://bynotforget.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-AlexNet、VGG、GoogLeNet-总结" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/" class="article-date">
+  <time class="dt-published" datetime="2022-08-20T09:25:29.000Z" itemprop="datePublished">2022-08-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      AlexNet、VGG、GoogLeNet 总结
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>一、AlexNet网络<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/1.png"><br>主要亮点有：</p>
+<p>（1）首次利用 GPU 进行网络加速训练。</p>
+<p>（2）使用了 ReLU 激活函数，而不是传统的 Sigmoid 激活函数以及 Tanh 激活函数。</p>
+<p>（3）使用了 LRN 局部响应归一化。</p>
+<p>（4）在全连接层的前两层中使用了 Dropout 随机失活神经元操作，以减少过拟合。</p>
+<p>引入Dropout的作用：<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/2.png"><br>过拟合：根本原因是特征维度过多，模型假设过于复杂，参数 过多，训练数据过少，噪声过多，导致拟合的函数完美的预测 训练集，但对新数据的测试集预测结果差。 过度的拟合了训练 数据，而没有考虑到泛化能力。</p>
+<p>​ 引入Dropout主要是为了防止过拟合。在神经网络中Dropout通过修改神经网络本身结构来实现，对于某一层的神经元，通过定义的概率将神经元置为0，这个神经元就不参与前向和后向传播，就如同在网络中被删除了一样，同时保持输入层与输出层神经元的个数不变，然后按照神经网络的学习方法进行参数更新。在下一次迭代中，又重新随机删除一些神经元（置为0），直至训练结束。<br>Dropout是AlexNet中一个很大的创新，也现在神经网络中的必备结构之一。Dropout也可以看成是一种模型组合，每次生成的网络结构都不一样，通过组合多个模型的方式能够有效地减少过拟合，Dropout只需要两倍的训练时间即可实现模型组合（类似取平均）的效果，非常高效。</p>
+<p>二、VGG网络</p>
+<p><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/3.png"><br>VGG16相比AleNet的一个改进采用连续的几个3<em>3的卷积核代替AlexNet中的较大卷积核（11</em>11,7<em>7,5</em>5）。对于给定的感受野，采用堆积的小卷积核是优于采用大的卷积核，因为多层非线性层可以增加网络深度来保证学习更复杂的模式，而且参数更少。</p>
+<p>主要亮点：</p>
+<p>（1）结构简洁。VGG由5层卷积层、3层全连接层、softmax输出层构成，层与层之间使用max-pooling分开，所有隐层的激活单元都采用ReLU函数。<br>（2）小卷积核和多卷积子层。VGG使用多个较小卷积核（3x3）的卷积层代替一个卷积核较大的卷积层，一方面可以减少参数，另一方面相当于进行了更多的非线性映射，可以增加网络的拟合&#x2F;表达能力。VGG通过降低卷积核的大小（3x3），增加卷积子层数来达到同样的性能。<br>（3）小池化核。相比AlexNet的3x3的池化核，VGG全部采用2x2的池化核。<br>（4）通道数多。VGG网络第一层的通道数为64，后面每层都进行了翻倍，最多到512个通道，通道数的增加，使得更多的信息可以被提取出来。<br>（5）层数更深、特征图更宽。使用连续的小卷积核代替大的卷积核，网络的深度更深，并且对边缘进行填充，卷积的过程并不会降低图像尺寸。<br>（6）全连接转卷积（测试阶段）。在网络测试阶段将训练阶段的三个全连接替换为三个卷积，使得测试得到的全卷积网络因为没有全连接的限制，因而可以接收任意宽或高为的输入。</p>
+<p>细节一：两个3x3的卷积堆叠获得的感受野大小，相当一个5x5的卷积；而3个3x3卷积的堆叠获取到的感受野相当于一个7x7的卷积。<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/4.png"></p>
+<p>好处：（1）可以增加非线性映射；（2）很好地减少参数。</p>
+<p>细节二：在网络测试阶段将训练阶段的三个全连接替换为三个卷积，使得测试得到的全卷积网络因为没有全连接的限制。</p>
+<p><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/5.png"><br>为什么这样做?</p>
+<p>原因：输入图像是224x224x3，如果后面三个层都是全连接，那么在测试阶段就只能将测试的图像全部都要缩放大小到224x224x3，才能符合后面全连接层的输入数量要求，这样就不便于测试工作的开展。</p>
+<p>举例说明：<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/6.png"><br>例如7x7x512的层要跟4096个神经元的层做全连接，则替换为对7x7x512的层作通道数为4096、卷积核为1x1的卷积。<br>这个“全连接转卷积”的思路是VGG作者参考了OverFeat的工作思路，例如下图是OverFeat将全连接换成卷积后，则可以来处理任意分辨率（在整张图）上计算卷积，这就是无需对原图做重新缩放处理的优势。</p>
+<p>三、GoogLeNet网络</p>
+<p>更大的网络容易产生过拟合且计算复杂度太高。针对这两点，GoogLeNet认为最基本的方法是使用稀疏连接代替全连接和卷积操作。</p>
+<p>基于保持神经网络结构的稀疏性，又能充分利用密集矩阵的高计算性能的出发点，GoogleNet提出了名为Inception的模块化结构来实现此目的。</p>
+<p>Inception是一种网中网（Network In Network）的结构，基于此结构的整个网络的宽度和深度都可扩大，并且能够带来2-3倍的性能提升，Inception目前有v1到v4总共4个版本。<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/7.png"><br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/8.png"><br>（1） 1x1conv branch<br>    1x1conv branch就是上图中最左侧的分支，利用1x1卷积将网络加宽后进行BatchNorm最后再激活</p>
+<p>（2）1x1conv -&gt; 3x3conv branch<br>    这一步卷积核是3x3的尺寸，但是在进行3x3卷积之前，特征图会先经过1x1的卷积层降参（1x1卷积会使网络参数显著降低）</p>
+<p>（3）1x1conv -&gt; 5x5conv branch<br>    先经过1x1的卷积降参，后经过5x5的卷积层进行特征提取<br>    InceptionV1中是用的kernel&#x3D;5的卷积核进行特征提取的，在V2中将5x5换成了2个3x3的卷积核，因为二者等效且3x3的卷积参数量约是5x5的卷积操作的1&#x2F;3。所以代码中的2个3x3卷积操作实际上就是图中右侧5x5的卷积操作。</p>
+<p>（4）3x3pooling -&gt; 1x1conv<br>    这里虽然用了池化核，但是具体的操作更像卷积。<br>    以往的池化操作步长stride是与卷积核kernel大小相同的，并且不进行填充，这样HxW的特征图经过池化层后大小就变成H&#x2F;s x W&#x2F;s；<br>    这里的池化操作stride&#x3D;1，padding&#x3D;1，kernel&#x3D;3，实际上经过池化操作后特征图大小并不会改变，仅仅是利用池化层来提取与卷积操作不同的特征表达。</p>
+<p>要点：<br>1、1x1卷积</p>
+<p>可以看到图中有多个黄色的1x1卷积模块，这样的卷积有什么用处呢？</p>
+<p>作用①：在相同尺寸的感受野中叠加更多的卷积，能提取到更丰富的特征。这个观点来自于Network in Network，下图里三个1x1卷积都起到了该作用。</p>
+<p><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/9.png"></p>
+<p>作用②：使用1x1卷积进行降维，降低了计算复杂度。</p>
+<p><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/10.png"></p>
+<p>2、辅助分类器<br>    GoogLeNet用到了辅助分类器。GoogleNet一共有22层，除了最后一层的输出结果，中间节点的分类效果也有可能是很好的（例如叶片病虫害分类任务更注重浅层的纹理特征），所以GoogLeNet将中间某一层的输出作为分类，并以一个较小的权重（0.3和0.3）加到最终的分类结果中，一共有2个这样的辅助分类节点。</p>
+<p>辅助分类器相当于对模型做了融合，同时给网络增加了反向传播的梯度信号，在一定程度上提供了正则化的作用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/" data-id="cl7jvhaez00006sfn6e7daz0l" data-title="AlexNet、VGG、GoogLeNet 总结" class="article-share-link">Teilen</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/08/25/ResNet%E3%80%81DenseNet/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          ResNet、DenseNet
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/08/25/ResNet%E3%80%81DenseNet/">ResNet、DenseNet</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/">AlexNet、VGG、GoogLeNet 总结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 BY<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

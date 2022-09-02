@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>A blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="A blog">
+<meta property="og:url" content="https://bynotforget.github.io/index.html">
+<meta property="og:site_name" content="A blog">
+<meta property="og:locale">
+<meta property="article:author" content="BY">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="A blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">A blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://bynotforget.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-ResNet、DenseNet" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/08/25/ResNet%E3%80%81DenseNet/" class="article-date">
+  <time class="dt-published" datetime="2022-08-25T12:56:45.000Z" itemprop="datePublished">2022-08-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/08/25/ResNet%E3%80%81DenseNet/">ResNet、DenseNet</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ResNet—什么是残差网络？</p>
+<p>假设我们有如下的一个网络，它可以在训练集和测试集上可以得到很好的性能。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/1.png"><br>接着构造如下的网络，前面4层的参数复制于上面的网络，训练时这几层的参数保持不变。换言之，我们只是在上面的网络新增加了几个紫颜色表示的层。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/2.png"><br>理论上，这个新的网络在训练集或者测试集上的性能要比第一个网络的性能好，毕竟多了几个新增加的层提取特征。然后，实际上这个新的网络却比原先的网络的性能要差。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/3.png"><br>56层的网络无论是在训练集还是测试集上，误差率都比20层的要高。出现这种现象的原因并非是由于层数加深引发的梯度消失&#x2F;梯度爆炸，因为已经通过归一化的方法解决了这个问题，对于出现这种现象的原因将在下面讨论，我们将这种反常的现象称之为“退化现象“。</p>
+<p>为什么会出现这样的原因呢，何凯明在文章中给出的解释是“难以对网络进行优化”。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/4.png"><br>而退化现象也表明了，实际上新增加的几个紫色的层，很难做到恒等映射。又或者能做到，但在有限的时间内很难完成（即网络要用指数级别的时间才能达到收敛）。</p>
+<p>这时候，巧妙的通过添加”桥梁“，使得难以优化的问题瞬间迎刃而解。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/5.png"><br>可以看到通过添加这个桥梁，把数据原封不动得送到FC层的前面，而对于中间的紫色层，可以很容易的通过把这些层的参数逼近于0，进而实现f(x)&#x3D;x的功能。<br>通过跳连接，可以把前四层的输出先送到FC层前面，也就相当于告诉紫色层：“我已经做完前面的工作了，你看看能不能在剩下的工作中发点力，要是找不出提升性能的效果也没事的，我们可以把你的参数逼近于0。”<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/6.png"><br>神经网络无非是拟合一个复杂的函数映射关系，而通过跳链接，可以很好的“切割”这种映射关系，实现“分步”完成。我们把整个映射看成100%，则前面四层网络实现了98%的映射关系，而残余的映射由紫色层完成，Residual 另一个翻译就是”残余，残留“的意思，也就是让每一个残差块，只关注残余映射的一小部分，真的是恰到好处。当然了，实际上网络运行的时候，我们并不会知道哪几层就能达到很好的效果，然后在它们的后面接一个跳连接，于是一开始便在两个层或者三个层之间添加跳连接，形成残差块，每个残差块只关注当前的残余映射，而不会关注前面已经实现的底层映射。大概形状如下图：<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/7.png"></p>
+<p>DenseNet</p>
+<p>DenseNet的基本思路与ResNet一致，但是它建立的是前面所有层与后面层的密集连接（dense connection），它的名称也是由此而来。DenseNet的另一大特色是通过特征在channel上的连接来实现特征重用（feature reuse）。这些特点让DenseNet在参数和计算成本更少的情形下实现比ResNet更优的性能。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/8.png"><br>相比ResNet，DenseNet提出了一个更激进的密集连接机制：即互相连接所有的层，具体来说就是每个层都会接受其前面所有层作为其额外的输入。图1为ResNet网络的连接机制，作为对比，图2为DenseNet的密集连接机制。可以看到，ResNet是每个层与前面的某层（一般是2~3层）短路连接在一起，连接方式是通过元素级相加。而在DenseNet中，每个层都会与前面所有层在channel维度上连接（concat）在一起（这里各个层的特征图大小是相同的，后面会有说明），并作为下一层的输入。对于一个 L  层的网络，DenseNet共包含 L ( L + 1 )&#x2F; 2 个连接，相比ResNet，这是一种密集连接。而且DenseNet是直接concat来自不同层的特征图，这可以实现特征重用，提升效率，这一特点是DenseNet与ResNet最主要的区别。</p>
+<p><img src="/2022/08/25/ResNet%E3%80%81DenseNet/9.png"></p>
+<pre><code>ResNet网络的短路连接机制（其中+代表的是元素级相加操作）
+</code></pre>
+<p><img src="/2022/08/25/ResNet%E3%80%81DenseNet/10.png"></p>
+<pre><code>DenseNet网络的密集连接机制（其中c代表的是channel级连接操作）
+</code></pre>
+<p>DenseNet的前向过程如图所示，可以更直观地理解其密集连接方式，比h3的输入不仅来自h2的x2，还包括前面两层的x1和x2，它们是在channel维度上连接在一起的。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/11.png"><br>DenseNet的密集连接方式需要特征图大小保持一致。为了解决这个问题，DenseNet网络中使用DenseBlock+Transition的结构，其中DenseBlock是包含很多层的模块，每个层的特征图大小相同，层与层之间采用密集连接方式。而Transition模块是连接两个相邻的DenseBlock，并且通过Pooling使特征图大小降低。下图给出了DenseNet的网路结构，它共包含4个DenseBlock，各个DenseBlock之间通过Transition连接在一起。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/12.png"></p>
+<p>DenseNet网络结构<br>如前所示，DenseNet的网络结构主要由DenseBlock和Transition组成，如图所示。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/13.png"><br>在DenseBlock中，各个层的特征图大小一致，可以在channel维度上连接。DenseBlock中的非线性组合函数H(.)采用的是BN+ReLU+3x3 Conv的结构，如图所示。另外值得注意的一点是，与ResNet不同，所有DenseBlock中各个层卷积之后均输出k个特征图，即得到的特征图的channel数为k，或者说采用k个卷积核。k在DenseNet称为growth rate，这是一个超参数。一般情况下使用较小的 k（比如12），就可以得到较佳的性能。假定输入层的特征图的channel数为 k0 ，那么 l 层输入的channel数为 k0 + k(l-1)，因此随着层数增加，尽管k设定得较小，DenseBlock的输入会非常多，不过这是由于特征重用所造成的，每个层仅有k个特征是自己独有的。<br><img src="/2022/08/25/ResNet%E3%80%81DenseNet/14.png"></p>
+<pre><code>DenseBlock中的非线性转换结构
+</code></pre>
+<p>由于后面层的输入会非常大，DenseBlock内部可以采用bottleneck层来减少计算量，主要是原有的结构中增加1x1 Conv，如图所示，即BN+ReLU+1x1 Conv+BN+ReLU+3x3 Conv，称为DenseNet-B结构。其中1x1 Conv得到4k个特征图它起到的作用是降低特征数量，从而提升计算效率。</p>
+<p><img src="/2022/08/25/ResNet%E3%80%81DenseNet/15.png"></p>
+<pre><code>使用bottleneck层的DenseBlock结构 
+</code></pre>
+<p>对于Transition层，它主要是连接两个相邻的DenseBlock，并且降低特征图大小。Transition层包括一个1x1的卷积和2x2的AvgPooling，结构为BN+ReLU+1x1 Conv+2x2 AvgPooling。另外，Transition层可以起到压缩模型的作用。假定Transition的上接DenseBlock得到的特征图channels数为m ，Transition层可以产生θm个特征，其中θ∈(0,1] 是压缩系数（compression rate）。当θ&#x3D;1 时，特征个数经过Transition层没有变化，即无压缩，而当压缩系数小于1时，这种结构称为DenseNet-C，文中使用θ&#x3D;0.5。对于使用bottleneck层的DenseBlock结构和压缩系数小于1的Transition组合结构称为DenseNet-BC。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/" data-id="cl7jvhafh00036sfnhmoo3h1w" data-title="ResNet、DenseNet" class="article-share-link">Teilen</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-AlexNet、VGG、GoogLeNet-总结" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/" class="article-date">
+  <time class="dt-published" datetime="2022-08-20T09:25:29.000Z" itemprop="datePublished">2022-08-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/">AlexNet、VGG、GoogLeNet 总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>一、AlexNet网络<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/1.png"><br>主要亮点有：</p>
+<p>（1）首次利用 GPU 进行网络加速训练。</p>
+<p>（2）使用了 ReLU 激活函数，而不是传统的 Sigmoid 激活函数以及 Tanh 激活函数。</p>
+<p>（3）使用了 LRN 局部响应归一化。</p>
+<p>（4）在全连接层的前两层中使用了 Dropout 随机失活神经元操作，以减少过拟合。</p>
+<p>引入Dropout的作用：<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/2.png"><br>过拟合：根本原因是特征维度过多，模型假设过于复杂，参数 过多，训练数据过少，噪声过多，导致拟合的函数完美的预测 训练集，但对新数据的测试集预测结果差。 过度的拟合了训练 数据，而没有考虑到泛化能力。</p>
+<p>​ 引入Dropout主要是为了防止过拟合。在神经网络中Dropout通过修改神经网络本身结构来实现，对于某一层的神经元，通过定义的概率将神经元置为0，这个神经元就不参与前向和后向传播，就如同在网络中被删除了一样，同时保持输入层与输出层神经元的个数不变，然后按照神经网络的学习方法进行参数更新。在下一次迭代中，又重新随机删除一些神经元（置为0），直至训练结束。<br>Dropout是AlexNet中一个很大的创新，也现在神经网络中的必备结构之一。Dropout也可以看成是一种模型组合，每次生成的网络结构都不一样，通过组合多个模型的方式能够有效地减少过拟合，Dropout只需要两倍的训练时间即可实现模型组合（类似取平均）的效果，非常高效。</p>
+<p>二、VGG网络</p>
+<p><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/3.png"><br>VGG16相比AleNet的一个改进采用连续的几个3<em>3的卷积核代替AlexNet中的较大卷积核（11</em>11,7<em>7,5</em>5）。对于给定的感受野，采用堆积的小卷积核是优于采用大的卷积核，因为多层非线性层可以增加网络深度来保证学习更复杂的模式，而且参数更少。</p>
+<p>主要亮点：</p>
+<p>（1）结构简洁。VGG由5层卷积层、3层全连接层、softmax输出层构成，层与层之间使用max-pooling分开，所有隐层的激活单元都采用ReLU函数。<br>（2）小卷积核和多卷积子层。VGG使用多个较小卷积核（3x3）的卷积层代替一个卷积核较大的卷积层，一方面可以减少参数，另一方面相当于进行了更多的非线性映射，可以增加网络的拟合&#x2F;表达能力。VGG通过降低卷积核的大小（3x3），增加卷积子层数来达到同样的性能。<br>（3）小池化核。相比AlexNet的3x3的池化核，VGG全部采用2x2的池化核。<br>（4）通道数多。VGG网络第一层的通道数为64，后面每层都进行了翻倍，最多到512个通道，通道数的增加，使得更多的信息可以被提取出来。<br>（5）层数更深、特征图更宽。使用连续的小卷积核代替大的卷积核，网络的深度更深，并且对边缘进行填充，卷积的过程并不会降低图像尺寸。<br>（6）全连接转卷积（测试阶段）。在网络测试阶段将训练阶段的三个全连接替换为三个卷积，使得测试得到的全卷积网络因为没有全连接的限制，因而可以接收任意宽或高为的输入。</p>
+<p>细节一：两个3x3的卷积堆叠获得的感受野大小，相当一个5x5的卷积；而3个3x3卷积的堆叠获取到的感受野相当于一个7x7的卷积。<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/4.png"></p>
+<p>好处：（1）可以增加非线性映射；（2）很好地减少参数。</p>
+<p>细节二：在网络测试阶段将训练阶段的三个全连接替换为三个卷积，使得测试得到的全卷积网络因为没有全连接的限制。</p>
+<p><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/5.png"><br>为什么这样做?</p>
+<p>原因：输入图像是224x224x3，如果后面三个层都是全连接，那么在测试阶段就只能将测试的图像全部都要缩放大小到224x224x3，才能符合后面全连接层的输入数量要求，这样就不便于测试工作的开展。</p>
+<p>举例说明：<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/6.png"><br>例如7x7x512的层要跟4096个神经元的层做全连接，则替换为对7x7x512的层作通道数为4096、卷积核为1x1的卷积。<br>这个“全连接转卷积”的思路是VGG作者参考了OverFeat的工作思路，例如下图是OverFeat将全连接换成卷积后，则可以来处理任意分辨率（在整张图）上计算卷积，这就是无需对原图做重新缩放处理的优势。</p>
+<p>三、GoogLeNet网络</p>
+<p>更大的网络容易产生过拟合且计算复杂度太高。针对这两点，GoogLeNet认为最基本的方法是使用稀疏连接代替全连接和卷积操作。</p>
+<p>基于保持神经网络结构的稀疏性，又能充分利用密集矩阵的高计算性能的出发点，GoogleNet提出了名为Inception的模块化结构来实现此目的。</p>
+<p>Inception是一种网中网（Network In Network）的结构，基于此结构的整个网络的宽度和深度都可扩大，并且能够带来2-3倍的性能提升，Inception目前有v1到v4总共4个版本。<br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/7.png"><br><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/8.png"><br>（1） 1x1conv branch<br>    1x1conv branch就是上图中最左侧的分支，利用1x1卷积将网络加宽后进行BatchNorm最后再激活</p>
+<p>（2）1x1conv -&gt; 3x3conv branch<br>    这一步卷积核是3x3的尺寸，但是在进行3x3卷积之前，特征图会先经过1x1的卷积层降参（1x1卷积会使网络参数显著降低）</p>
+<p>（3）1x1conv -&gt; 5x5conv branch<br>    先经过1x1的卷积降参，后经过5x5的卷积层进行特征提取<br>    InceptionV1中是用的kernel&#x3D;5的卷积核进行特征提取的，在V2中将5x5换成了2个3x3的卷积核，因为二者等效且3x3的卷积参数量约是5x5的卷积操作的1&#x2F;3。所以代码中的2个3x3卷积操作实际上就是图中右侧5x5的卷积操作。</p>
+<p>（4）3x3pooling -&gt; 1x1conv<br>    这里虽然用了池化核，但是具体的操作更像卷积。<br>    以往的池化操作步长stride是与卷积核kernel大小相同的，并且不进行填充，这样HxW的特征图经过池化层后大小就变成H&#x2F;s x W&#x2F;s；<br>    这里的池化操作stride&#x3D;1，padding&#x3D;1，kernel&#x3D;3，实际上经过池化操作后特征图大小并不会改变，仅仅是利用池化层来提取与卷积操作不同的特征表达。</p>
+<p>要点：<br>1、1x1卷积</p>
+<p>可以看到图中有多个黄色的1x1卷积模块，这样的卷积有什么用处呢？</p>
+<p>作用①：在相同尺寸的感受野中叠加更多的卷积，能提取到更丰富的特征。这个观点来自于Network in Network，下图里三个1x1卷积都起到了该作用。</p>
+<p><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/9.png"></p>
+<p>作用②：使用1x1卷积进行降维，降低了计算复杂度。</p>
+<p><img src="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/10.png"></p>
+<p>2、辅助分类器<br>    GoogLeNet用到了辅助分类器。GoogleNet一共有22层，除了最后一层的输出结果，中间节点的分类效果也有可能是很好的（例如叶片病虫害分类任务更注重浅层的纹理特征），所以GoogLeNet将中间某一层的输出作为分类，并以一个较小的权重（0.3和0.3）加到最终的分类结果中，一共有2个这样的辅助分类节点。</p>
+<p>辅助分类器相当于对模型做了融合，同时给网络增加了反向传播的梯度信号，在一定程度上提供了正则化的作用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://bynotforget.github.io/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/" data-id="cl7jvhaez00006sfn6e7daz0l" data-title="AlexNet、VGG、GoogLeNet 总结" class="article-share-link">Teilen</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/08/25/ResNet%E3%80%81DenseNet/">ResNet、DenseNet</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/">AlexNet、VGG、GoogLeNet 总结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 BY<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
