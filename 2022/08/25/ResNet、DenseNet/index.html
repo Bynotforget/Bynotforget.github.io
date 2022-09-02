@@ -9,30 +9,30 @@
   <meta name="description" content="ResNet—什么是残差网络？ 假设我们有如下的一个网络，它可以在训练集和测试集上可以得到很好的性能。接着构造如下的网络，前面4层的参数复制于上面的网络，训练时这几层的参数保持不变。换言之，我们只是在上面的网络新增加了几个紫颜色表示的层。理论上，这个新的网络在训练集或者测试集上的性能要比第一个网络的性能好，毕竟多了几个新增加的层提取特征。然后，实际上这个新的网络却比原先的网络的性能要差。56层的网">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ResNet、DenseNet">
-<meta property="og:url" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/index.html">
+<meta property="og:url" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/index.html">
 <meta property="og:site_name" content="A blog">
 <meta property="og:description" content="ResNet—什么是残差网络？ 假设我们有如下的一个网络，它可以在训练集和测试集上可以得到很好的性能。接着构造如下的网络，前面4层的参数复制于上面的网络，训练时这几层的参数保持不变。换言之，我们只是在上面的网络新增加了几个紫颜色表示的层。理论上，这个新的网络在训练集或者测试集上的性能要比第一个网络的性能好，毕竟多了几个新增加的层提取特征。然后，实际上这个新的网络却比原先的网络的性能要差。56层的网">
 <meta property="og:locale">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/1.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/2.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/3.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/4.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/5.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/6.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/7.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/8.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/9.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/10.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/11.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/12.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/13.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/14.png">
-<meta property="og:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/15.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/1.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/2.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/3.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/4.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/5.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/6.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/7.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/8.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/9.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/10.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/11.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/12.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/13.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/14.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/15.png">
 <meta property="article:published_time" content="2022-08-25T12:56:45.000Z">
 <meta property="article:modified_time" content="2022-08-26T13:39:10.688Z">
 <meta property="article:author" content="BY">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/1.png">
+<meta name="twitter:image" content="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/1.png">
   
     <link rel="alternate" href="/atom.xml" title="A blog" type="application/atom+xml">
   
@@ -79,10 +79,10 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://bynotforget.github.io"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://bynotforget.github.io.git"></form>
       </div>
     </div>
   </div>
@@ -136,7 +136,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bynotforget.github.io/2022/08/25/ResNet%E3%80%81DenseNet/" data-id="cl7jvhafh00036sfnhmoo3h1w" data-title="ResNet、DenseNet" class="article-share-link">Teilen</a>
+      <a data-url="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/" data-id="cl7jvhafh00036sfnhmoo3h1w" data-title="ResNet、DenseNet" class="article-share-link">Share</a>
       
       
       
@@ -146,9 +146,18 @@
     
 <nav id="article-nav">
   
+    <a href="/2022/08/28/SENet-MobileNet/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          SENet&amp;MobileNet
+        
+      </div>
+    </a>
+  
   
     <a href="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Älter</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">AlexNet、VGG、GoogLeNet 总结</div>
     </a>
   
@@ -186,7 +195,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archiv</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
     </div>
@@ -196,9 +205,13 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">letzter Beitrag</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022/08/28/SENet-MobileNet/">SENet&amp;MobileNet</a>
+          </li>
         
           <li>
             <a href="/2022/08/25/ResNet%E3%80%81DenseNet/">ResNet、DenseNet</a>

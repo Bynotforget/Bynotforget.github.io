@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>SENet&amp;MobileNet | A blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="SENet网络 SENet网络的创新点在于关注channel之间的关系，希望模型可以自动学习到不同channel特征的重要程度。 对于CNN网络来说，其核心计算是卷积算子，其通过卷积核从输入特征图学习到新特征图。从本质上讲，卷积是对一个局部区域进行特征融合，这包括空间上（H和W维度）以及通道间（C维度）的特征融合。 对于卷积操作，很大一部分工作是提高感受野，即空间上融合更多特征融合，或者是提取多尺">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SENet&amp;MobileNet">
+<meta property="og:url" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/index.html">
+<meta property="og:site_name" content="A blog">
+<meta property="og:description" content="SENet网络 SENet网络的创新点在于关注channel之间的关系，希望模型可以自动学习到不同channel特征的重要程度。 对于CNN网络来说，其核心计算是卷积算子，其通过卷积核从输入特征图学习到新特征图。从本质上讲，卷积是对一个局部区域进行特征融合，这包括空间上（H和W维度）以及通道间（C维度）的特征融合。 对于卷积操作，很大一部分工作是提高感受野，即空间上融合更多特征融合，或者是提取多尺">
+<meta property="og:locale">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/1.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/2.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/3.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/4.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/6.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/7.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/8.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/9.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/10.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/11.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/12.png">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/14.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/15.jpg">
+<meta property="article:published_time" content="2022-08-28T07:39:35.000Z">
+<meta property="article:modified_time" content="2022-09-02T08:21:34.226Z">
+<meta property="article:author" content="BY">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="A blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">A blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://bynotforget.github.io.git"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-SENet-MobileNet" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/08/28/SENet-MobileNet/" class="article-date">
+  <time class="dt-published" datetime="2022-08-28T07:39:35.000Z" itemprop="datePublished">2022-08-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      SENet&amp;MobileNet
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>SENet网络</p>
+<p>SENet网络的创新点在于关注channel之间的关系，希望模型可以自动学习到不同channel特征的重要程度。</p>
+<p>对于CNN网络来说，其核心计算是卷积算子，其通过卷积核从输入特征图学习到新特征图。从本质上讲，卷积是对一个局部区域进行特征融合，这包括空间上（H和W维度）以及通道间（C维度）的特征融合。</p>
+<p>对于卷积操作，很大一部分工作是提高感受野，即空间上融合更多特征融合，或者是提取多尺度空间信息，如Inception网络的多分支结构。对于channel维度的特征融合，卷积操作基本上默认对输入特征图的所有channel进行融合。而MobileNet网络中的组卷积（Group Convolution）和深度可分离卷积（Depthwise Separable Convolution）对channel进行分组也主要是为了使模型更加轻量级，减少计算量。而SENet网络的创新点在于关注channel之间的关系，希望模型可以自动学习到不同channel特征的重要程度。为此，SENet提出了Squeeze-and-Excitation (SE)模块，如下图所示：</p>
+<p><img src="/2022/08/28/SENet-MobileNet/1.png"></p>
+<pre><code>                       Squeeze-and-Excitation (SE)模块
+</code></pre>
+<p>SE模块首先对卷积得到的特征图进行Squeeze操作，得到channel级的全局特征，然后对全局特征进行Excitation操作，学习各个channel间的关系，也得到不同channel的权重，最后乘以原来的特征图得到最终特征。本质上，SE模块是在channel维度上做attention或者gating操作，这种注意力机制让模型可以更加关注信息量最大的channel特征，而抑制那些不重要的channel特征。另外一点是SE模块是通用的，这意味着其可以嵌入到现有的网络架构中。</p>
+<p>SE模块<br><img src="/2022/08/28/SENet-MobileNet/2.png"></p>
+<p>Squeeze操作<br>由于卷积只是在一个局部空间内进行操作，  很难获得足够的信息来提取channel之间的关系，对于网络中前面的层这更严重，因为感受野比较小。为了，SENet提出Squeeze操作，将一个channel上整个空间特征编码为一个全局特征，采用global average pooling来实现（原则上也可以采用更复杂的聚合策略）：<br><img src="/2022/08/28/SENet-MobileNet/3.png"></p>
+<p>Excitation操作<br>Sequeeze操作得到了全局描述特征，我们接下来需要另外一种运算来抓取channel之间的关系。这个操作需要满足两个准则：首先要灵活，它要可以学习到各个channel之间的非线性关系；第二点是学习的关系不是互斥的，因为这里允许多channel特征，而不是one-hot形式。基于此，这里采用sigmoid形式的gating机制：<br><img src="/2022/08/28/SENet-MobileNet/4.png"></p>
+<pre><code>其中![](SENet-MobileNet/5.png).
+</code></pre>
+<p>为了降低模型复杂度以及提升泛化能力，这里采用包含两个全连接层的bottleneck结构，其中第一个FC层起到降维的作用，降维系数为r是个超参数，然后采用ReLU激活。最后的FC层恢复原始的维度。</p>
+<p>最后将学习到的各个channel的激活值（sigmoid激活，值0~1）乘以U上的原始特征：<br><img src="/2022/08/28/SENet-MobileNet/6.png"><br>整个操作可以看成学习到了各个channel的权重系数，从而使得模型对各个channel的特征更有辨别能力，这应该也算一种attention机制。</p>
+<p>SE模块的灵活性在于它可以直接应用现有的网络结构中。这里以Inception和ResNet为例。对于Inception网络，没有残差结构，这里对整个Inception模块应用SE模块。对于ResNet，SE模块嵌入到残差结构中的残差学习分支中。具体如下图所示：<br><img src="/2022/08/28/SENet-MobileNet/7.png"></p>
+<p>MobileNet网络</p>
+<p>MobileNet V1</p>
+<p>MobileNet V1是由google2016年提出，2017年发布的文章。其主要创新点在于深度可分离卷积，而整个网络实际上也是深度可分离模块的堆叠。</p>
+<p>模型结构对与模型耗时的影响：<img src="/2022/08/28/SENet-MobileNet/8.png"><br>可以看到不管是在GPU还是在CPU运行，最重要的“耗时杀手”就是conv，卷积层。也就是说，想要提高网络的运行速度，就得到提高卷积层的计算效率。</p>
+<p>那么什么是深度可分离卷积？<br><img src="/2022/08/28/SENet-MobileNet/9.png"><br>深度可分离卷积被证明是轻量化网络的有效设计，如上图所示，深度可分离卷积由逐深度卷积（Depthwise）和逐点卷积（Pointwise）构成。</p>
+<p>对比于标准卷积，逐深度卷积将卷积核拆分成为单通道形式，在不改变输入特征图像的深度的情况下，对每一通道进行卷积操作，这样就得到了和输入特征图通道数一致的输出特征图。</p>
+<p>逐点卷积就是1×1卷积。主要作用就是对特征图进行升维和降维。</p>
+<p>标准卷积与深度可分离卷积详细对比：<br><img src="/2022/08/28/SENet-MobileNet/10.png"><br>那么MobileNet V1为什么会快呢？<br><img src="/2022/08/28/SENet-MobileNet/11.png"><br>对比标准卷积和深度可分离卷积的计算量就会发现，因为卷积核的尺寸K通常远小于输出通道数Cout，因此标准卷积的计算复杂度近似为 DW + PW 组合卷积的K*K倍。计算量减少，模型自然会快。</p>
+<p>工程实现中一般采用如下右侧结构来实现深度可分离模块，左侧为标准卷积。其中，Relu6&#x3D;min(max(0,x),6)<br><img src="/2022/08/28/SENet-MobileNet/12.png"></p>
+<pre><code>ReLU6就是普通的ReLU但是限制最大输出值为6（对输出值做clip），这是为了在移动端设备float16的低精度的时候，也能有很好的数值分辨率，如果对ReLU的激活范围不加限制，输出范围为0到正无穷，如果激活值非常大，分布在一个很大的范围内，则低精度的float16无法很好地精确描述如此大范围的数值，带来精度损失。
+![](SENet-MobileNet/13.jpg)
+</code></pre>
+<p>MobileNet V2</p>
+<p>MobileNet V1的缺点：</p>
+<p>结构问题：<br>V1结构过于简单，没有复用图像特征，即没有concat&#x2F;eltwise+ 等操作进行特征融合，而后续的一系列的ResNet, DenseNet等结构已经证明复用图像特征的有效性。</p>
+<p>逐深度卷积问题：<br>在处理低维数据（比如逐深度的卷积）时，relu函数会造成信息的丢失。<br>DW 卷积由于本身的计算特性决定它自己没有改变通道数的能力，上一层给它多少通道，它就只能输出多少通道。所以如果上一层给的通道数本身很少的话，DW 也只能很委屈的在低维空间提特征，因此效果不够好。</p>
+<p>V2使用了跟V1类似的深度可分离结构，不同之处也正对应着V1中逐深度卷积的缺点改进：</p>
+<p>V2 去掉了第二个 PW 的激活函数改为线性激活。<br>论文作者称其为 Linear Bottleneck。原因如上所述是因为作者认为激活函数在高维空间能够有效的增加非线性，而在低维空间时则会破坏特征，不如线性的效果好。<br>V2 在 DW 卷积之前新加了一个 PW 卷积。<br>给每个 DW 之前都配备了一个 PW，专门用来升维，定义升维系数t&#x3D;6，这样不管输入通道数Cin是多是少，经过第一个 PW 升维之后，DW 都是在相对的更高维 (t,Cin) 进行更好的特征提取。</p>
+<p>Inverted residuals<br><img src="/2022/08/28/SENet-MobileNet/14.jpg"><br>MobileNet V2 借鉴 ResNet，都采用了 1<em>1→3</em>3→1*1 的模式。同样使用 Shortcut 将输出与输入相加（未在上式画出） .<br>但是ResNet 先降维 (0.25倍)、卷积、再升维，而 MobileNet V2 则是 先升维 (6倍)、卷积、再降维。直观的形象上来看，ResNet 的微结构是沙漏形，而 MobileNet V2 则是纺锤形，刚好相反。因此论文作者将 MobileNet V2 的结构称为 Inverted Residual Block。这么做也是因为使用DW卷积而作的适配，希望特征提取能够在高维进行。</p>
+<p>MobileNet V2的深度可分离模块与MobileNet V1对比：<br><img src="/2022/08/28/SENet-MobileNet/15.jpg"></p>
+<pre><code>Mobilenet v2中有两种深度可分离模块，步长为1时输入输出size相等，此时使用shortcut结构。步长为2时，由于input与outputsize不符，不添加shortcut结构。
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/" data-id="cl7k7jdn70000asfndgsse3an" data-title="SENet&amp;MobileNet" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/08/25/ResNet%E3%80%81DenseNet/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ResNet、DenseNet</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/08/28/SENet-MobileNet/">SENet&amp;MobileNet</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/25/ResNet%E3%80%81DenseNet/">ResNet、DenseNet</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/">AlexNet、VGG、GoogLeNet 总结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 BY<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
