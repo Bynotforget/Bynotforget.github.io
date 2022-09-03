@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>ShuffleNet&amp;EfficientNet | A blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="ShuffleNet网络 ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，其和MobileNet和SqueezeNet等一样主要是想应用在移动端。所以，ShuffleNet的设计目标也是如何利用有限的计算资源来达到最好的模型精度，这需要很好地在速度和精度之间做平衡。ShuffleNet的核心是采用了两种操作：pointwise group convolution和channel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ShuffleNet&amp;EfficientNet">
+<meta property="og:url" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/index.html">
+<meta property="og:site_name" content="A blog">
+<meta property="og:description" content="ShuffleNet网络 ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，其和MobileNet和SqueezeNet等一样主要是想应用在移动端。所以，ShuffleNet的设计目标也是如何利用有限的计算资源来达到最好的模型精度，这需要很好地在速度和精度之间做平衡。ShuffleNet的核心是采用了两种操作：pointwise group convolution和channel">
+<meta property="og:locale">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/1.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/2.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/3.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/4.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/5.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/6.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/7.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/8.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/9.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/10.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/11.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/12.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/13.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/14.jpg">
+<meta property="og:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/15.jpg">
+<meta property="article:published_time" content="2022-09-01T02:05:20.000Z">
+<meta property="article:modified_time" content="2022-09-03T02:36:02.502Z">
+<meta property="article:author" content="BY">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/1.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="A blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">A blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://bynotforget.github.io.git"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ShuffleNet-EfficientNet" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/09/01/ShuffleNet-EfficientNet/" class="article-date">
+  <time class="dt-published" datetime="2022-09-01T02:05:20.000Z" itemprop="datePublished">2022-09-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      ShuffleNet&amp;EfficientNet
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ShuffleNet网络</p>
+<p>ShuffleNet是旷视科技最近提出的一种计算高效的CNN模型，其和MobileNet和SqueezeNet等一样主要是想应用在移动端。所以，ShuffleNet的设计目标也是如何利用有限的计算资源来达到最好的模型精度，这需要很好地在速度和精度之间做平衡。ShuffleNet的核心是采用了两种操作：pointwise group convolution和channel shuffle，这在保持精度的同时大大降低了模型的计算量。目前移动端CNN模型主要设计思路主要是两个方面：模型结构设计和模型压缩。ShuffleNet和MobileNet一样属于前者，都是通过设计更高效的网络结构来实现模型变小和变快，而不是对一个训练好的大模型做压缩或者迁移。</p>
+<p>ShuffleNet的核心设计理念是对不同的channels进行shuffle来解决group convolution带来的弊端。Group convolution是将输入层的不同特征图进行分组，然后采用不同的卷积核再对各个组进行卷积，这样会降低卷积的计算量。因为一般的卷积都是在所有的输入特征图上做卷积，可以说是全通道卷积，这是一种通道密集连接方式（channel dense connection）。而group convolution相比则是一种通道稀疏连接方式（channel sparse connection）。使用group convolution的网络如Xception，MobileNet，ResNeXt等。Xception和MobileNet采用了depthwise convolution，这其实是一种比较特殊的group convolution，因此此时分组数恰好等于通道数，意味着每个组只有一个特征图。但是这些网络存在一个很大的弊端是采用了密集的1x1卷积，或者说是dense pointwise convolution，这里说的密集指的是卷积是在所有通道上进行的。所以，实际上比如ResNeXt模型中1x1卷积基本上占据了93.4%的乘加运算。那么不如也对1x1卷积采用channel sparse connection，那样计算量就可以降下来了。但是group convolution存在另外一个弊端，如图1-(a)所示，其中GConv是group convolution，这里分组数是3。可以看到当堆积GConv层后一个问题是不同组之间的特征图是不通信的，这就好像分了三个互不相干的路，大家各走各的，这目测会降低网络的特征提取能力。这样你也可以理解为什么Xception，MobileNet等网络采用密集的1x1卷积，因为要保证group convolution之后不同组的特征图之间的信息交流。但是达到上面那个目的，我们不一定非要采用dense pointwise convolution。如图1-(b)所示，你可以对group convolution之后的特征图进行“重组”，这样可以保证接下了采用的group convolution其输入来自不同的组，因此信息可以在不同组之间流转。这个操作等价于图2-(c)，即group convolution之后对channels进行shuffle，但并不是随机的，其实是“均匀地打乱”。在程序上实现channel shuffle是非常容易的：假定将输入层分为g组，总通道数为g*n，首先你将通道那个维度拆分为(g,n)两个维度，然后将这两个维度转置变成(n,g)，最后重新reshape成一个维度。如果你不太理解这个操作，你可以试着动手去试一下，发现仅需要简单的维度操作和转置就可以实现均匀的shuffle。利用channel shuffle就可以充分发挥group convolution的优点，而避免其缺点。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/1.jpg"><br>                                图1 使用channel shuffle后的group convolution</p>
+<p>网络结构<br>基于上面的设计理念，首先来构造ShuffleNet的基本单元，如图2所示。ShuffleNet的基本单元是在一个残差单元的基础上改进而成的。如图2-（a）所示，这是一个包含3层的残差单元：首先是1x1卷积，然后是3x3的depthwise convolution（DWConv，主要是为了降低计算量），这里的3x3卷积是瓶颈层（bottleneck），紧接着是1x1卷积，最后是一个短路连接，将输入直接加到输出上。现在，进行如下的改进：将密集的1x1卷积替换成1x1的group convolution，不过在第一个1x1卷积之后增加了一个channel shuffle操作。值得注意的是3x3卷积后面没有增加channel shuffle，按paper的意思，对于这样一个残差单元，一个channel shuffle操作是足够了。还有就是3x3的depthwise convolution之后没有使用ReLU激活函数。改进之后如图2-（b）所示。对于残差单元，如果stride&#x3D;1时，此时输入与输出shape一致可以直接相加，而当stride&#x3D;2时，通道数增加，而特征图大小减小，此时输入与输出不匹配。一般情况下可以采用一个1x1卷积将输入映射成和输出一样的shape。但是在ShuffleNet中，却采用了不一样的策略，如图2-（c）所示：对原输入采用stride&#x3D;2的3x3 avg pool，这样得到和输出一样大小的特征图，然后将得到特征图与输出进行连接（concat），而不是相加。这样做的目的主要是降低计算量与参数大小。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/2.jpg"><br>                                图2 ShuffleNet的基本单元</p>
+<p>基于上面改进的ShuffleNet基本单元，设计的ShuffleNet模型如表1所示。可以看到开始使用的普通的3x3的卷积和max pool层。然后是三个阶段，每个阶段都是重复堆积了几个ShuffleNet的基本单元。对于每个阶段，第一个基本单元采用的是stride&#x3D;2，这样特征图width和height各降低一半，而通道数增加一倍。后面的基本单元都是stride&#x3D;1，特征图和通道数都保持不变。对于基本单元来说，其中瓶颈层，就是3x3卷积层的通道数为输出通道数的1&#x2F;4，这和残差单元的设计理念是一样的。不过有个细节是，对于stride&#x3D;2的基本单元，由于原输入会贡献一部分最终输出的通道数，那么在计算1&#x2F;4时到底使用最终的通道数，还是仅仅未concat之前的通道数。文章没有说清楚，但是个人认为应该是后者吧。其中 g 控制了group convolution中的分组数，分组越多，在相同计算资源下，可以使用更多的通道数，所以g越大时，采用了更多的卷积核。这里给个例子，当 g&#x3D;3 时，对于第一阶段的第一个基本单元，其输入通道数为24，输出通道数为240，但是其stride&#x3D;2，那么由于原输入通过avg pool可以贡献24个通道，所以相当于左支只需要产生240-24&#x3D;216通道，中间瓶颈层的通道数就为216&#x2F;4&#x3D;54。其他的可以以此类推。当完成三阶段后，采用global pool将特征图大小降为1x1，最后是输出类别预测值的全连接层。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/3.jpg"><br>                                表1 ShuffleNet的网络结</p>
+<p>模型效果<br>那么ShuffleNet的模型效果如何呢？表2给出了采用不同的$g$值的ShuffleNet在ImageNet上的实验结果。可以看到基本上当$g$越大时，效果越好，这是因为采用更多的分组后，在相同的计算约束下可以使用更多的通道数，或者说特征图数量增加，网络的特征提取能力增强，网络性能得到提升。注意Shuffle 1x是基准模型，而0.5x和0.25x表示的是在基准模型上将通道数缩小为原来的0.5和0.25。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/4.jpg"><br>                                表2 采用不同g值的ShuffleNet的分类误差</p>
+<p>除此之外，作者还对比了不采用channle shuffle和采用之后的网络性能对比，如表3所示。可以清楚的看到，采用channle shuffle之后，网络性能更好，从而证明channle shuffle的有效性。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/5.jpg"><br>                                表3 不采用channle shuffle和采用之后的网络性能对比</p>
+<p>然后是ShuffleNet与MobileNet的对比，如表4所示。可以看到ShuffleNet不仅计算复杂度更低，而且精度更好。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/6.jpg"><br>                                表4 ShuffleNet与MobileNet对比</p>
+<p>EfficientNet网络</p>
+<p>卷积神经网络（ConvNets）通常是在固定的资源预算下发展起来的，如果有更多的资源可用的话，则会扩大规模以获得更好的精度，比如可以提高网络深度(depth)、网络宽度(width)和输入图像分辨率 (resolution)大小。但是通过人工去调整 depth, width, resolution 的放大或缩小的很困难的，在计算量受限时有放大哪个缩小哪个，这些都是很难去确定的，换句话说，这样的组合空间太大，人力无法穷举。基于上述背景，该论文提出了一种新的模型缩放方法，它使用一个简单而高效的复合系数来从depth, width, resolution 三个维度放大网络，不会像传统的方法那样任意缩放网络的维度，基于神经结构搜索技术可以获得最优的一组参数(复合系数)。从下图可看出，EfficientNet不仅比别的网络快很多，而且精度也更高。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/7.jpg"></p>
+<p>本篇论文中会同时增加网络的width、网络的深度以及输入网络的分辨率来提升网络的性能如图所示：</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/8.jpg"></p>
+<p>根据以往的经验，增加网络的深度depth能够得到更加丰富、复杂的特征并且能够很好的应用到其它任务中。但网络的深度过深会面临梯度消失，训练困难的问题。<br>增加网络的width能够获得更高细粒度的特征并且也更容易训练，但对于width很大而深度较浅的网络往往很难学习到更深层次的特征。<br>增加输入网络的图像分辨率能够潜在得获得更高细粒度的特征模板，但对于非常高的输入分辨率，准确率的增益也会减小。并且大分辨率图像会增加计算量。<br>下图展示了在基准EfficientNetB-0上分别增加width、depth以及resolution后得到的统计结果。通过下图可以看出大概在Accuracy达到80%时就趋于饱和了。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/9.jpg"></p>
+<p>接着作者又做了一个实验，采用不同的d，r组合，然后不断改变网络的width就得到了如下图所示的4条曲线，通过分析可以发现在相同的FLOPs下，同时增加d和r的效果最好。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/10.jpg"></p>
+<p>网络详细结构<br>下表为EfficientNet-B0的网络框架（B1-B7就是在B0的基础上修改Resolution，Channels以及Layers），可以看出网络总共分成了9个Stage，第一个Stage就是一个卷积核大小为3x3步距为2的普通卷积层（包含BN和激活函数Swish），Stage2～Stage8都是在重复堆叠MBConv结构（最后一列的Layers表示该Stage重复MBConv结构多少次），而Stage9由一个普通的1x1的卷积层（包含BN和激活函数Swish）一个平均池化层和一个全连接层组成。表格中每个MBConv后会跟一个数字1或6，这里的1或6就是倍率因子n即MBConv中第一个1x1的卷积层会将输入特征矩阵的channels扩充为n倍，其中k3x3或k5x5表示MBConv中Depthwise Conv所采用的卷积核大小。Channels表示通过该Stage后输出特征矩阵的Channels。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/11.jpg"></p>
+<p>MBConv结构<br>MBConv其实就是MobileNetV3网络中的InvertedResidualBlock，但也有些许区别。一个是采用的激活函数不一样（EfficientNet的MBConv中使用的都是Swish激活函数），另一个是在每个MBConv中都加入了SE（Squeeze-and-Excitation）模块。下图是MBConv结构。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/12.jpg"></p>
+<p>如下图所示，MBConv结构主要由一个1x1的普通卷积（升维作用，包含BN和Swish），一个kxk的Depthwise Conv卷积（包含BN和Swish）k的具体值可看EfficientNet-B0的网络框架主要有3x3和5x5两种情况，一个SE模块，一个1x1的普通卷积（降维作用，包含BN），一个Droupout层构成。</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/13.jpg"></p>
+<p>EfficientNetB0的网络结构<br><img src="/2022/09/01/ShuffleNet-EfficientNet/14.jpg"></p>
+<p>原论文中关于EfficientNet与当时主流网络的性能参数对比：</p>
+<p><img src="/2022/09/01/ShuffleNet-EfficientNet/15.jpg"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/" data-id="cl7lamw1x0000rkfn6nh53n4b" data-title="ShuffleNet&amp;EfficientNet" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/08/28/SENet-MobileNet/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SENet&amp;MobileNet</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">深度学习</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/01/ShuffleNet-EfficientNet/">ShuffleNet&amp;EfficientNet</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/28/SENet-MobileNet/">SENet&amp;MobileNet</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/25/ResNet%E3%80%81DenseNet/">ResNet、DenseNet</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/">AlexNet、VGG、GoogLeNet 总结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 BY<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
