@@ -59,10 +59,10 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://bynotforget.github.io.git"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://bynotforget.github.io.git"></form>
       </div>
     </div>
   </div>
@@ -70,6 +70,147 @@
 
       <div class="outer">
         <section id="main">
+  
+    <article id="post-FPN-R-CNN" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/09/14/FPN-R-CNN/" class="article-date">
+  <time class="dt-published" datetime="2022-09-14T01:50:27.000Z" itemprop="datePublished">2022-09-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/09/14/FPN-R-CNN/">FPN &amp; R-CNN</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>FPN</p>
+<p>一、FPN提出原因</p>
+<p>卷积网络中，深层网络容易响应语义特征，浅层网络容易响应图像特征。然而，在目标检测中往往因为卷积网络的这个特征带来了不少麻烦：</p>
+<p>高层网络虽然能响应语义特征，但是由于Feature Map的尺寸太小，拥有的几何信息并不多，不利于目标的检测；浅层网络虽然包含比较多的几何信息，但是图像的语义特征并不多，不利于图像的分类。这个问题在小目标检测中更为突出。</p>
+<p>因此，如果我们能够合并深层和浅层特征的话，同时满足目标检测和图像分类的需要，那我们的问题可能就迎刃而解.</p>
+<p>二、FPN的参考思想</p>
+<p>FPN使用的是图像金字塔的思想。</p>
+<p>传统的图像金字塔采用输入多尺度图像的方式构建多尺度的特征。简单来说，就是我们输入一张图像后，我们可以通过一些手段获得多张不同尺度的图像，我们将这些不同尺度的图像的4个顶点连接起来，就可以构造出一个类似真实金字塔的一个图像金字塔。整个过程有点像是我们看一个物品由远及近的过程（近大远小原理）。</p>
+<p>其中，中间的图像是原始图像，尺寸越来越小的图片是经过下采样处理后的结果，而尺寸越来越大的图片是经过上采样处理后的结果。这样我们可以提取到更多的有用的信息。</p>
+<p>三、特征金字塔</p>
+<p>运用这种金字塔的思想可以提高算法的性能，但是需要大量的运算和内存。</p>
+<p>因此特征金字塔要在速度和准确率之间进行权衡，通过它获得更加鲁棒的语义信息。</p>
+<p>图像中存在不同大小的目标，而不同的目标具有不同的特征，所以我们需要特征金字塔来利用浅层的特征将简单的目标区分开，利用深层的特征将复杂的目标区分开。即利用大的特征图区分简单目标，利用小的特征图区分复杂目标。</p>
+<p>四、FPN具体思路</p>
+<p>提出的思路如下图所示：</p>
+<p><img src="/2022/09/14/FPN-R-CNN/1.png"></p>
+<p>图（a）：</p>
+<p>先对原始图像构造图像金字塔，然后在图像金字塔的每一层提出不同的特征，然后进行相应的预测。优点：精度不错；缺点：计算量大得恐怖，占用内存大。直接pass！</p>
+<p>图（b）：</p>
+<p>通过对原始图像进行卷积和池化操作来获得不同尺寸的feature map，在图像的特征空间中构造出金字塔。</p>
+<p>因为浅层的网络更关注于细节信息，高层的网络更关注于语义信息，更有利于准确检测出目标，因此利用最后一个卷积层上的feature map来进行预测分类。</p>
+<p>优点：速度快、内存少。缺点：仅关注深层网络中最后一层的特征，却忽略了其它层的特征。</p>
+<p>图（c）：</p>
+<p>同时利用低层特征和高层特征。就是首先在原始图像上面进行深度卷积，然后分别在不同的特征层上面进行预测。</p>
+<p>优点：在不同的层上面输出对应的目标，不需要经过所有的层才输出对应的目标（即对于有些目标来说，不用进行多余的前向操作），速度更快，又提高了算法的检测性能。</p>
+<p>缺点：获得的特征不鲁棒，都是一些弱特征（因为很多的特征都是从较浅的层获得的）。</p>
+<p>图（d）这才是我们真正的FPN</p>
+<p>简单概括来说就是：自下而上，自上而下，横向连接和卷积融合。</p>
+<p>整体过程：</p>
+<p>（1）自下而上：先把预处理好的图片送进预训练的网络，比如像ResNet这些，这一步就是构建自下而上的网络，就是对应下图中的（1，2，3）这一组金字塔。</p>
+<p>（2）自上而下：将层3进行一个复制变成层4，对层4进行上采样操作（就是2 * up），再用1 * 1卷积对层2进行降维处理，然后将两者对应元素相加（这里就是高低层特征的一个汇总），这样我们就得到了层5，层6以此类推，是由层5和层1进行上述操作得来的。这样就构成了自上而下网络，对应下图（4，5，6）金字塔。（其中的层2与上采样后的层4进行相加，就是横向连接的操作）</p>
+<p>（3）卷积融合：最后我们对层4，5，6分别来一个3 * 3卷积操作得到最终的预测（对应下图的predict）。</p>
+<p><img src="/2022/09/14/FPN-R-CNN/2.png"></p>
+<p>R-CNN</p>
+<p>一：初识R-CNN<br>R-CNN系列论文（R-CNN,fast-RCNN,faster-RCNN）是使用深度学习进行物体检测的鼻祖论文，其中fast-RCNN 以及faster-RCNN都是沿袭R-CNN的思路。</p>
+<p>R-CNN全称region with CNN features，其实它的名字就是一个很好的解释。用CNN提取出Region Proposals中的featues，然后进行SVM分类与bbox的回归。</p>
+<p>[网络结构]<br><img src="/2022/09/14/FPN-R-CNN/3.png"></p>
+<p>二：训练步骤<br>1.RP的确定<br>首先介绍一下Selective Search算法，训练过程中用于从输入图像中搜索出2000个Region Proposal。Selective Search算法主要步骤：</p>
+<p>使用一种过分割手段，将图像分割成小区域 (1k~2k 个)<br>计算所有邻近区域之间的相似性，包括颜色、纹理、尺度等<br>将相似度比较高的区域合并到一起<br>计算合并区域和临近区域的相似度<br>重复3、4过程，直到整个图片变成一个区域<br>在每次迭代中，形成更大的区域并将其添加到区域提议列表中。这种自下而上的方式可以创建从小到大的不同scale的Region Proposal，如图所示:</p>
+<p><img src="/2022/09/14/FPN-R-CNN/4.png"></p>
+<p>2.模型pre-training<br>在实际测试的时候，模型需要通过CNN提取出RP中的特征，用于后面的分类与回归。所以，如何训练好CNN成为重中之重。</p>
+<p>由于物体标签训练数据少，如果要直接采用随机初始化CNN参数的方法是不足以从零开始训练出一个好的CNN模型。基于此，采用有监督的预训练，使用一个大的数据集（ImageNet ILSVC 2012）来训练AlexNet，得到一个1000分类的预训练（Pre-trained）模型。</p>
+<p><img src="/2022/09/14/FPN-R-CNN/5.png"></p>
+<p>3.Fine-Tunning<br>因为R-CNN模型实际测试时，是通过CNN对VOC测试集中每张输入图像上搜索到的2000个Region Proposal提取特征的。而RP大小都不相同，且AlexNet要求输入图像大小是227×227，所以需要对RP进行resize操作，将它们变形为227×227。变形之前，我们先在候选框周围加上16的padding,再进行各向异性缩放。 这种形变使得mAp提高了3到5个百分点。</p>
+<p>而原CNN模型针对ImageNet数据集且无变形的图像来提取特征，现在却是针对VOC检测数据集且变形的图像来提取特征。所以，为了让我们的CNN适应新的任务（即检测任务）和新的领域（变形后的推荐窗口），需要对CNN做特定领域的参数调优，也就是fine-tunning。用的是从每张VOC训练图像中搜索到的Region Proposal进行微调的。</p>
+<p>( 备注：还有一个原因，如果不针对特定任务进行fine-tuning，而是把CNN当做特征提取器，卷积层所学到的特征其实就是基础的共享特征提取层，就类似于SIFT算法一样，可以用于提取各种图片的特征，而f6、f7所学习到的特征是用于针对特定任务的特征。打个比方：对于人脸性别识别来说，一个CNN模型前面的卷积层所学习到的特征就类似于学习人脸共性特征，然后全连接层所学习的特征就是针对性别分类的特征了）</p>
+<p>首先对 PASCAL VOC数据集 进行Selective Search，搜索到2000个Region Proposal对Pre-trained模型进行fine-tuning。将原来预训练模型最后的1000-way的全连接层（分类层）换成21-way的分类层（20类物体+背景），然后计算每个region proposal和ground truth 的IoU，对于IoU&gt;0.5的region proposal被视为正样本，否则为负样本（即背景）。另外，由于对于一张图片的多有候选区域来说，负样本是远远大于正样本数，所以需要将正样本进行上采样来保证样本分布均衡。在每次迭代的过程中，选择层次采样，每个mini-batch中采样两张图像，从中随机选取32个正样本和96个负样本组成一个mini-batch（128，正负比：1：3）。我们使用0.001的学习率和SGD来进行训练。</p>
+<p><img src="/2022/09/14/FPN-R-CNN/6.png"></p>
+<p>4.提取并保存RP的特征向量<br>提取特征的CNN网络经过了预训练和微调后不再训练，就固定不变了，只单纯的作为一个提特征的工具了。虽然文中训练了CNN网络对region proposal进行分类，但是实际中，这个CNN的作用只是提取每个region proposal的feature。<br>所以，我们输入VOC训练数据集，SS搜索出2000个RP后输入进CNN进行前向传播，然后保存AlexNet的FC7层4096维的features，以供后续的SVM分类使用。</p>
+<p>5.SVM的训练<br>作者使用SVM进行分类。对于每一类都会训练一个SVM分类器，所以共有N（21）个分类器，我们来看一下是如何训练和使用SVM分类器的。</p>
+<p><img src="/2022/09/14/FPN-R-CNN/7.png"><br>在SVM分类过程中，IOU&lt;0.3被作为负例，ground-truth（即完全框住了物体，默认IOU＞0.7时）是正例，其余的全部丢弃。然后SVM分类器也会输出一个预测的labels，然后用labels和truth labels比较，计算出loss，然后训练SVM。</p>
+<p>其中，有一个细节，就是SVM由于是小样本训练，所以会存在负样本远多于正样本的情况。针对这种情况，作者使用了hard negative mining方法（初始时用所有样本训练，但是这样负样本可能远多王正样本，经过一轮训练后将score最高即最容易被误判的负样本加入新的样本训练集，进行训练，重复以上步骤至达到停止条件比如分类器性能不再提升），使得SVM适用于小样本训练，在样本不平衡时依然可以做到不会发生过拟合。</p>
+<p>作者为什么要Hard Negatives？因为，负样本数目巨大，其中Pos样本数目占的比例特别低，负样本太多，直接导致优化过程很慢，因为很多负样本远离分界面对于优化几乎没有帮助（SVM分类最大间隔，只有支持向量比较有用）。Data-minig的作用就是去掉那些对优化作用很小的Easy-examples保留靠近分界面的Hard-examples。</p>
+<p>为什么要专门使用SVM分类，而不是CNN最后的21层softmax层分类？<br>之前在训练CNN提取特征时，设置的IOU是0.5以上为正样本，小于0.5的是负样本。但在SVM分类中，只有bbox完全包围了物体（也可以理解为IOU＞0.7时）才是正样本，IOU小于0.3的是负样本。前者是大样本训练，后者是小样本训练。对于CNN的训练，需要大量的数据，不然容易过拟合，所以设置的阈值较低，比如一个bounding box可能只包含物体的一部分，那么我也把它标注为正样本，用于训练cnn；然而svm训练的时候，因为svm适用于少样本训练，所以对于训练样本数据的IOU要求比较严格，我们只有当bounding box把整个物体都包含进去了（IOU＞0.7），我们才把它标注为物体类别，IOU＜0.3的标注为负样本，然后训练svm。就因为这个特点，只能用低IOU来softmax分类，那么很可能导致最后的bbox框位置不准确（如果bbox和GT差距太大，通过线性回归会无法收敛），同时类识别精度也不高，根据实验MAP会下降几个百分点。如果硬要提高IOU，又会导致训练数据样本太少，发生过拟合。罪魁祸首就是Small VOC的训练量太少了，限制了太多优化操作。故最后选择了SVM完成分类，CNN只用来提取特征。</p>
+<p>6.bbox regression的训练<br>与GT的IOU＞0.6的RP作为正样本，做回归训练。<br><img src="/2022/09/14/FPN-R-CNN/8.png"><br><img src="/2022/09/14/FPN-R-CNN/9.png"><br>        就是训练 d 矩阵向 t 矩阵靠齐的过程。</p>
+<p>Fast R-CNN</p>
+<p>Fast R-CNN 主要是在R-CNN和SPPNet的基础上进行改进的，有着以下几个优点：</p>
+<p>1.与R-CNN、SPPNet相比，有着更高的准确率。<br>2.通过使用多任务损失，将模型训练由多阶段转变为单阶段训练。<br>3.训练时可以一次更新网络的所有层，不再需要分步更新参数。<br>4.不再需要硬盘来存储CNN提取的特征数据<br><img src="/2022/09/14/FPN-R-CNN/10.png"><br>            Fast R-CNN的网络结构</p>
+<p>Fast R-CNN的流程主要分为三步：</p>
+<p>1.使用 Selective Search 方法生成2K个图片候选区域。<br>2.对整张图片进行特征提取得到相应的特征图（这是对R-CNN的一大改进，参考了SPPNet），并将上一步生成的候选区域映射到特征图中。<br>3.使用ROI Pooling将所有的候选区域特征统一缩放到7*7大小，然后将这2K个特征向量展平，并连接到全连接层上，得到两个输出结果，一个是K+1类(类别数+背景类)的概率，还有一个是每个类的预测边框。<br><img src="/2022/09/14/FPN-R-CNN/11.png"><br>            Fast R-CNN的具体网络结构</p>
+<p><img src="/2022/09/14/FPN-R-CNN/12.png"></p>
+<p> 在R-CNN中为了统一输入使用了比较暴力的方法，但在Fast R-CNN中，使用了RoI Pooling，这一方法参考了SPPNet的空间金字塔池化，可以将RoI Pooling看做空间金字塔池化的一个简化版。简单来说，RoI Pooling 就是将每一个候选区域的特征图分割成7<em>7&#x3D;49等分，对于每一个区域使用最大池化操作，这样就能将所有输入统一到7</em>7的大小。<br><img src="/2022/09/14/FPN-R-CNN/13.png"></p>
+<p>使用了多任务的损失函数来简化R-CNN中的多阶段训练。<br><img src="/2022/09/14/FPN-R-CNN/14.png"></p>
+<p>Fast RCNN总结：<br>在原文中，作者说Fast RCNN是R-CNN和SPPNet的一个快速更新，所以改进的内容并不是特别多，与后面的Faster RCNN提出了RPN相比，这只能算是一次打补丁的行为。</p>
+<p>文中作者更多关心的是一些其它的问题，此处由于篇幅所限，仅简单列举一下作者研究的问题以及相关的结论，具体细节请自行看论文。</p>
+<p>1.多任务训练是否有帮助？<br>结论：是的，多任务训练效果比分阶段训练更好。<br>2. 尺度不变性:暴力方法还是巧妙技巧？</p>
+<p>人话版：在统一图像特征尺度时，是使用SPPNet的空间金字塔池化还是本文中的ROI池化？<br>结论：两者效果差距微乎其微，甚至空间金字塔池化因为计算开销大，计算所需时间更长。<br>3. 训练数据是不是越多越好？</p>
+<p>结论：将训练数据翻倍，可以将mAP提高2%~3%。<br>4. SVM的表现是否优于softmax？</p>
+<p>结论：网络直接输出各类概率(softmax)，比SVM分类器性能略好<br>5. 候选区域是不是越多越好？</p>
+<p>结论：否，候选区域从1K增加到10K的过程中，mAP先有所提升，然后略有下降，而且如果使用更多的候选区域，不仅没有帮助，反而会损害精度。</p>
+<p><img src="/2022/09/14/FPN-R-CNN/15.png"><br>Fast RCNN不足：<br>候选区域的选取还是通过selective search，并且只能在CPU中运行这个算法，所以这个阶段浪费了大量时间。（这也是Faster RCNN改进的点）</p>
+<p>Faster RCNN </p>
+<p>Faster R-CNN算是RCNN系列算法的最杰出产物，也是two-stage中最为经典的物体检测算法。</p>
+<p>第一阶段生成图片中待检测物体的anchor矩形框（对背景和待检测物体进行二分类）<br>第二阶段对anchor框内待检测物体进行分类。<br>Faster RCNN可以看作 RPN+Fast RCNN，其中RPN使用CNN来生成候选区域，并且RPN网络可以认为是一个使用了注意力机制的候选区域选择器，具体的网络结构如下图所示：</p>
+<p><img src="/2022/09/14/FPN-R-CNN/16.png"></p>
+<p>整个Faster RCNN网络可以分为三个部分，即backnone、RPN以及Roi pooling与分类网络，如下图所示：</p>
+<p>首先缩放至固定大小MxN，然后将MxN图像送入网络；<br>而Conv layers中包含了13个conv层+13个relu层+4个pooling层；<br>RPN网络首先经过3x3卷积，再分别生成positive anchors和对应bounding box regression偏移量，然后计算出proposals；<br>而Roi Pooling层则利用proposals从feature maps中提取proposal feature送入后续全连接和softmax网络作classification（即分类proposal到底是什么object）。<br><img src="/2022/09/14/FPN-R-CNN/17.png"></p>
+<p>1 Conv layers<br>Conv layers包含了conv，pooling，relu三种层。以python版本中的VGG16模型中的faster_rcnn_test.pt的网络结构为例，如图2，Conv layers部分共有13个conv层，13个relu层，4个pooling层。这里有一个非常容易被忽略但是又无比重要的信息，在Conv layers中：</p>
+<p>所有的conv层都是：kernel_size&#x3D;3，pad&#x3D;1，stride&#x3D;1<br>所有的pooling层都是：kernel_size&#x3D;2，pad&#x3D;0，stride&#x3D;2<br>为何重要？在Faster RCNN Conv layers中对所有的卷积都做了扩边处理（ pad&#x3D;1，即填充一圈0），导致原图变为 (M+2)x(N+2)大小，再做3x3卷积后输出MxN 。正是这种设置，导致Conv layers中的conv层不改变输入和输出矩阵大小。如图：<br><img src="/2022/09/14/FPN-R-CNN/18.png"></p>
+<p>类似的是，Conv layers中的pooling层kernel_size&#x3D;2，stride&#x3D;2。这样每个经过pooling层的MxN矩阵，都会变为(M&#x2F;2)x(N&#x2F;2)大小。综上所述，在整个Conv layers中，conv和relu层不改变输入输出大小，只有pooling层使输出长宽都变为输入的1&#x2F;2。</p>
+<p>那么，一个MxN大小的矩阵经过Conv layers固定变为(M&#x2F;16)x(N&#x2F;16)！这样Conv layers生成的feature map中都可以和原图对应起来。</p>
+<p>2 Region Proposal Networks(RPN)<br>经典的检测方法生成检测框都非常耗时，如OpenCV adaboost使用滑动窗口+图像金字塔生成检测框；或如R-CNN使用SS(Selective Search)方法生成检测框。而Faster RCNN则抛弃了传统的滑动窗口和SS方法，直接使用RPN生成检测框，这也是Faster R-CNN的巨大优势，能极大提升检测框的生成速度。</p>
+<p><img src="/2022/09/14/FPN-R-CNN/19.png"></p>
+<p>上图展示了RPN网络的具体结构。可以看到RPN网络实际分为2条线，上面一条通过softmax分类anchors获得positive和negative分类，下面一条用于计算对于anchors的bounding box regression偏移量，以获得精确的proposal。而最后的Proposal层则负责综合positive anchors和对应bounding box regression偏移量获取proposals，同时剔除太小和超出边界的proposals。其实整个网络到了Proposal Layer这里，就完成了相当于目标定位的功能。</p>
+<p>2.1 多通道图像卷积基础知识介绍</p>
+<p>对于多通道图像+多卷积核做卷积，计算方式如下：<br><img src="/2022/09/14/FPN-R-CNN/20.png"></p>
+<p>如上图，输入有3个通道，同时有2个卷积核。对于每个卷积核，先在输入3个通道分别作卷积，再将3个通道结果加起来得到卷积输出。所以对于某个卷积层，无论输入图像有多少个通道，输出图像通道数总是等于卷积核数量！</p>
+<p>对多通道图像做1x1卷积，其实就是将输入图像于每个通道乘以卷积系数后加在一起，即相当于把原图像中本来各个独立的通道“联通”在了一起。</p>
+<p>2.2 anchors<br>提到RPN网络，就不能不说anchors。所谓anchors，实际上就是一组由rpn&#x2F;generate_anchors.py生成的矩形。直接运行作者demo中的generate_anchors.py可以得到以下输出：</p>
+<p>[[ -84.  -40.   99.   55.]<br> [-176.  -88.  191.  103.]<br> [-360. -184.  375.  199.]<br> [ -56.  -56.   71.   71.]<br> [-120. -120.  135.  135.]<br> [-248. -248.  263.  263.]<br> [ -36.  -80.   51.   95.]<br> [ -80. -168.   95.  183.]<br> [-168. -344.  183.  359.]]</p>
+<p>其中每行的4个值 (x1,y1,x2,y2)表矩形左上和右下角点坐标。9个矩形共有3种形状，长宽比为大约为w:h∈{1:1，1:2，1:2}三种，如下图。实际上通过anchors就引入了检测中常用到的多尺度方法。<br><img src="/2022/09/14/FPN-R-CNN/21.png"><br>注：关于上面的anchors size，其实是根据检测图像设置的。在python demo中，会把任意大小的输入图像reshape成800x600（即图2中的M&#x3D;800，N&#x3D;600）。再回头来看anchors的大小，anchors中长宽1:2中最大为352x704，长宽2:1中最大736x384，基本是cover了800x600的各个尺度和形状。</p>
+<p>那么这9个anchors是做什么的呢？借用Faster RCNN论文中的原图，如图7，遍历Conv layers计算获得的feature maps，为每一个点都配备这9种anchors作为初始的检测框。这样做获得检测框很不准确，不用担心，后面还有2次bounding box regression可以修正检测框位置。<br><img src="/2022/09/14/FPN-R-CNN/22.png"></p>
+<p>在原文中使用的是ZF model中，其Conv Layers中最后的conv5层num_output&#x3D;256，对应生成256张特征图，所以相当于feature map每个点都是256-dimensions<br>在conv5之后，做了rpn_conv&#x2F;3x3卷积且num_output&#x3D;256，相当于每个点又融合了周围3x3的空间信息（猜测这样做也许更鲁棒？反正我没测试），同时256-d不变（如图4和图7中的红框）<br>假设在conv5 feature map中每个点上有k个anchor（默认k&#x3D;9），而每个anhcor要分positive和negative，所以每个点由256d feature转化为cls&#x3D;2•k scores；而每个anchor都有(x, y, w, h)对应4个偏移量，所以reg&#x3D;4•k coordinates<br>补充一点，全部anchors拿去训练太多了，训练程序会在合适的anchors中随机选取128个postive anchors+128个negative anchors进行训练（什么是合适的anchors下文5.1有解释）<br>注意，在本文讲解中使用的VGG conv5 num_output&#x3D;512，所以是512d，其他类似。</p>
+<p>其实RPN最终就是在原图尺度上，设置了密密麻麻的候选Anchor。然后用cnn去判断哪些Anchor是里面有目标的positive anchor，哪些是没目标的negative anchor。所以，仅仅是个二分类而已！</p>
+<p>那么Anchor一共有多少个？原图800x600，VGG下采样16倍，feature map每个点设置9个Anchor，所以：<br><img src="/2022/09/14/FPN-R-CNN/23.png"><br>其中ceil()表示向上取整，是因为VGG输出的feature map size&#x3D; 50*38。<br><img src="/2022/09/14/FPN-R-CNN/24.png"></p>
+<p>2.3 softmax判定positive与negative<br>一副MxN大小的矩阵送入Faster RCNN网络后，到RPN网络变为(M&#x2F;16)x(N&#x2F;16)，不妨设 W&#x3D;M&#x2F;16，H&#x3D;N&#x2F;16。在进入reshape与softmax之前，先做了1x1卷积，如图：<br><img src="/2022/09/14/FPN-R-CNN/25.png"></p>
+<p>该1x1卷积的caffe prototxt定义如下：<br>layer {<br>  name: “rpn_cls_score”<br>  type: “Convolution”<br>  bottom: “rpn&#x2F;output”<br>  top: “rpn_cls_score”<br>  convolution_param {<br>    num_output: 18   # 2(positive&#x2F;negative) * 9(anchors)<br>    kernel_size: 1 pad: 0 stride: 1<br>  }<br>}</p>
+<p>可以看到其num_output&#x3D;18，也就是经过该卷积的输出图像为WxHx18大小（注意第二章开头提到的卷积计算方式）。这也就刚好对应了feature maps每一个点都有9个anchors，同时每个anchors又有可能是positive和negative，所有这些信息都保存WxHx(9*2)大小的矩阵。为何这样做？后面接softmax分类获得positive anchors，也就相当于初步提取了检测目标候选区域box（一般认为目标在positive anchors中）。</p>
+<p>那么为何要在softmax前后都接一个reshape layer？其实只是为了便于softmax分类，至于具体原因这就要从caffe的实现形式说起了。在caffe基本数据结构blob中以如下形式保存数据：<br>    blob&#x3D;[batch_size, channel，height，width]<br>对应至上面的保存positive&#x2F;negative anchors的矩阵，其在caffe blob中的存储形式为[1, 2x9, H, W]。而在softmax分类时需要进行positive&#x2F;negative二分类，所以reshape layer会将其变为[1, 2, 9xH, W]大小，即单独“腾空”出来一个维度以便softmax分类，之后再reshape回复原状。贴一段caffe softmax_loss_layer.cpp的reshape函数的解释，非常精辟：</p>
+<p>   “Number of labels must match number of predictions; “<br>    “e.g., if softmax axis &#x3D;&#x3D; 1 and prediction shape is (N, C, H, W), “<br>    “label count (number of labels) must be N<em>H</em>W, “<br>    “with integer values in {0, 1, …, C-1}.”;</p>
+<p>综上所述，RPN网络中利用anchors和softmax初步提取出positive anchors作为候选区域（另外也有实现用sigmoid代替softmax，输出[1, 1, 9xH, W]后接sigmoid进行positive&#x2F;negative二分类，原理一样）。</p>
+<p>2.4 bounding box regression原理<br>如图9所示绿色框为飞机的Ground Truth(GT)，红色为提取的positive anchors，即便红色的框被分类器识别为飞机，但是由于红色的框定位不准，这张图相当于没有正确的检测出飞机。所以我们希望采用一种方法对红色的框进行微调，使得positive anchors和GT更加接近。<br><img src="/2022/09/14/FPN-R-CNN/26.png"><br>对于窗口一般使用四维向量(x,y,w,h)表示，分别表示窗口的中心点坐标和宽高。对于图 11，红色的框A代表原始的positive Anchors，绿色的框G代表目标的GT，我们的目标是寻找一种关系，使得输入原始的anchor A经过映射得到一个跟真实窗口G更接近的回归窗口G’，即：<br><img src="/2022/09/14/FPN-R-CNN/27.png"></p>
+<p>那么经过何种变换F才能从图中的anchor A变为G’呢？ 比较简单的思路就是:<br><img src="/2022/09/14/FPN-R-CNN/28.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://bynotforget.github.io.git/2022/09/14/FPN-R-CNN/" data-id="cl811lm710000agfn3vwufmwv" data-title="FPN &amp; R-CNN" class="article-share-link">Teilen</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
   
     <article id="post-ShuffleNet-EfficientNet" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
@@ -129,7 +270,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/" data-id="cl7lamw1x0000rkfn6nh53n4b" data-title="ShuffleNet&amp;EfficientNet" class="article-share-link">Share</a>
+      <a data-url="https://bynotforget.github.io.git/2022/09/01/ShuffleNet-EfficientNet/" data-id="cl7lamw1x0000rkfn6nh53n4b" data-title="ShuffleNet&amp;EfficientNet" class="article-share-link">Teilen</a>
       
       
       
@@ -205,7 +346,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/" data-id="cl7k7jdn70000asfndgsse3an" data-title="SENet&amp;MobileNet" class="article-share-link">Share</a>
+      <a data-url="https://bynotforget.github.io.git/2022/08/28/SENet-MobileNet/" data-id="cl7k7jdn70000asfndgsse3an" data-title="SENet&amp;MobileNet" class="article-share-link">Teilen</a>
       
       
       
@@ -264,7 +405,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/" data-id="cl7jvhafh00036sfnhmoo3h1w" data-title="ResNet、DenseNet" class="article-share-link">Share</a>
+      <a data-url="https://bynotforget.github.io.git/2022/08/25/ResNet%E3%80%81DenseNet/" data-id="cl7jvhafh00036sfnhmoo3h1w" data-title="ResNet、DenseNet" class="article-share-link">Teilen</a>
       
       
       
@@ -334,7 +475,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bynotforget.github.io.git/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/" data-id="cl7jvhaez00006sfn6e7daz0l" data-title="AlexNet、VGG、GoogLeNet 总结" class="article-share-link">Share</a>
+      <a data-url="https://bynotforget.github.io.git/2022/08/20/AlexNet%E3%80%81VGG%E3%80%81GoogLeNet-%E6%80%BB%E7%BB%93/" data-id="cl7jvhaez00006sfn6e7daz0l" data-title="AlexNet、VGG、GoogLeNet 总结" class="article-share-link">Teilen</a>
       
       
       
@@ -378,7 +519,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Archiv</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
     </div>
@@ -388,9 +529,13 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">letzter Beitrag</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022/09/14/FPN-R-CNN/">FPN &amp; R-CNN</a>
+          </li>
         
           <li>
             <a href="/2022/09/01/ShuffleNet-EfficientNet/">ShuffleNet&amp;EfficientNet</a>
